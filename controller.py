@@ -1,22 +1,20 @@
-from flask import Flask
+from flask import Flask, request
 import os
 import pika
 app = Flask(__name__)
 
-@app.route("/")
-def main():
-    return "hello"
-
-@app.route("/add")
+@app.route("/add", methods=['POST'])
 def add_job_to_queue():
-    add_one("hello")
-    return "added"
+    bucket = request.args.get('bucket')
+    filename = request.args.get('filename')
+    add_one(bucket + "-" + filename)
+    return "Added to queue: " + bucket + '/' + filename
 
-@app.route("/addAll")
+@app.route("/addAll", methods=['POST'])
 def add_all():
     return ""
 
-@app.route("/list")
+@app.route("/list", methods=['GET'])
 def list():
     return ""
 
