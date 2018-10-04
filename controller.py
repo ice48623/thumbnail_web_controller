@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import os
 import pika
 import json
@@ -66,8 +66,13 @@ def get_all_object_in_bucket(host, bucket, port = "8080"):
 
 @app.route("/list", methods=['GET'])
 def list():
-    return ""
+    host = os.getenv('STORAGE_HOST','localhost')
+    port = "8080"
+    bucket = request.args.get('bucket')
 
+    url = "http://" + host + ":" + port + "/" + bucket + "?list"
+    r = requests.get(url)
+    return jsonify(r.json())
 
 
 if __name__ == '__main__':
